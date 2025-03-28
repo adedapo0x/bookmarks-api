@@ -1,13 +1,15 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { AuthDto } from "./dto";
+import { loginDto, signUpDto } from "./dto";
 import * as argon from "argon2"
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 
 @Injectable()
 export class AuthService{
     constructor(private prisma: PrismaService){}
-    async signup(dto: AuthDto){
+    async signup(dto: signUpDto){
+        try {
         // generate password hash
         const hash = await argon.hash(dto.password);
         // save user in the DB 
@@ -24,9 +26,24 @@ export class AuthService{
         const {hashPassword, ...sanitizedUser} = user;
         // return sanitized user
         return sanitizedUser;   
+            
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError){
+                if (error.code === 'P2002'){
+                    throw new ForbiddenException('Email already taken');
+                }
+            }
+            throw error;
+        }
+        
     }
 
-    login(){
-        return {msg: "I have logged in"}
+    async login(dto: loginDto){
+        try{
+            // Find the user by email
+        } catch (error){
+
+        }
+
     }
 }
