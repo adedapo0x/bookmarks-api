@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString, MinLength } from "class-validator";
 
-export class CreateBookmarkDTO {
+export class EditBookmarkDTO {
     @IsString()
     @IsNotEmpty()
     @MinLength(3)
