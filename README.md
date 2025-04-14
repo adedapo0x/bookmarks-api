@@ -47,6 +47,7 @@ $ yarn run start:dev
 
 # production mode
 $ yarn run start:prod
+```
 
 ## Getting Started
 
